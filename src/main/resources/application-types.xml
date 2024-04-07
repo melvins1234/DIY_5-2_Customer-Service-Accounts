@@ -4,6 +4,13 @@
     <types:type name="http_req_attrs_pojo" format="java">
       <types:shape format="java" element="org.mule.extension.http.api.HttpRequestAttributes"/>
     </types:type>
+    <types:type name="accounts_json" format="json">
+      <types:shape format="weave" example="examples/accounts.json"><![CDATA[%dw 2.0
+
+type accounts_json = Array<{|  id: Number {"typeId": "int"},   name: String,   "type": String,   address: String,   air_miles: Number {"typeId": "int"},   created_at: String|}> {"example": "[{\\\"id\\\":4429,\\\"name\\\":\\\"Wendy Crafts\\\",\\\"type\\\":\\\"business\\\",\\\"address\\\":\\\"982 Cherry Ave,Chennai,TN,25362,india\\\",\\\"air_miles\\\":10000,\\\"created_at\\\":\\\"2010-01-06T00:42:34\\\"},{\\\"id\\\":4430,\\\"name\\\":\\\"Robert Barath\\\",\\\"type\\\":\\\"business\\\",\\\"address\\\":\\\"12354 Foo Street,Boulder,Colorado,15361,Murrica\\\",\\\"air_miles\\\":55240,\\\"created_at\\\":\\\"2006-07-20T21:39:45\\\"},{\\\"id\\\":4444,\\\"name\\\":\\\"Wendy Crafts\\\",\\\"type\\\":\\\"personal\\\",\\\"address\\\":\\\"982 Cherry Ave,Chennai,TN,25362,india\\\",\\\"air_miles\\\":90000,\\\"created_at\\\":\\\"2010-01-06T00:42:34\\\"}]"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#7d65a1cc-0a14-4c16-8932-72785d681ed4">
     <types:processor-declaration>
@@ -19,6 +26,15 @@
       <types:input-event>
         <types:message>
           <types:attributes type="http_req_attrs_pojo"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#ab67ff46-79e2-4f14-a2f9-5c70ab1bdc68">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="accounts_json"/>
         </types:message>
       </types:input-event>
     </types:processor-declaration>

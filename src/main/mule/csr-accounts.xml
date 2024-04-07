@@ -40,7 +40,7 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-flatten(payload..*payload)]]></ee:set-payload>
+flatten(payload..*payload) distinctBy $.id]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
@@ -68,6 +68,30 @@ flatten(payload..*payload)]]></ee:set-payload>
 				<flow-ref doc:name="or-condition" doc:id="c0b5046a-97d7-48ef-848c-37e13e4b106d" name="or-condition"/>
 			</otherwise>
 		</choice>
+		<set-variable value="#[sizeOf(vars.numberOfRecords)]" doc:name="numberOfRecords" doc:id="9ba0278a-2f08-4bb0-8f90-7a6e12dedc51" variableName="numberOfRecords"/>
+		<ee:transform doc:name="JSON to XML" doc:id="ab67ff46-79e2-4f14-a2f9-5c70ab1bdc68" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+
+fun totalAirMiles (name) = do {
+	var accountName = payload filter ($.name == name)
+	---
+	sum(accountName.*air_miles)
+}
+
+
+---
+accounts: {( payload orderBy $.air_miles
+	map (
+		account @(
+			id : $.id,
+			total_air_miles: totalAirMiles($.name)
+		):$
+	)
+)}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 		<flow-ref doc:name="log-at-exit" doc:id="bd13f1f4-14f8-4c88-bc54-17d1f3406fca" name="log-at-exit" />
 		<error-handler ref="api-main-error-handler" />
 	</flow>
