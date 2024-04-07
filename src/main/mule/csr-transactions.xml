@@ -33,12 +33,16 @@ ns ns0 http://training.mulesoft.com/
 		</ee:transform>
 		<wsc:consume operation="GetTransactionsforCustomers" doc:name="Txs SOAP GetTransactionsforCustomers" doc:id="6d6e945f-c06f-4e74-85e6-665e26f0b1fd" config-ref="Transactions_Web_Service_Consumer_Config"/>
 		<set-variable value="#[sizeOf(payload..*transaction default [])]" doc:name="txNumber" doc:id="e5d38ff4-a651-44c6-b2e8-5f2018c6b110" variableName="txNumber"/>
-		<ee:transform doc:name="Transform Message" doc:id="e52c0c4c-625f-419a-aa53-fb1a354739fb">
+		<ee:transform doc:name="XML to JSON" doc:id="e52c0c4c-625f-419a-aa53-fb1a354739fb">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
-output application/xml
+output application/json
+var transactions = payload.body..*transaction
 ---
-payload.body]]></ee:set-payload>
+{
+	total_amount: sum(transactions.*amount default []),
+	transactions: transactions 
+}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>

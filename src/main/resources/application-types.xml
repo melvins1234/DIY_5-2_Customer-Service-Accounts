@@ -11,6 +11,9 @@ type accounts_json = Array<{|  id: Number {"typeId": "int"},   name: String,   "
 
 ]]></types:shape>
     </types:type>
+    <types:type name="transaction_xml" format="xml">
+      <types:example format="xml" element="transaction" location="examples/transactions.xml"/>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#7d65a1cc-0a14-4c16-8932-72785d681ed4">
     <types:processor-declaration>
@@ -39,4 +42,5 @@ type accounts_json = Array<{|  id: Number {"typeId": "int"},   name: String,   "
       </types:input-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#e52c0c4c-625f-419a-aa53-fb1a354739fb"/>
 </types:mule>
